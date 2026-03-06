@@ -27,9 +27,8 @@ public class PgnParser
                     if (String.IsNullOrWhiteSpace(line))
                     {
                         string? nextLine = reader.ReadLine();
-                        if (nextLine == null)
-                            break;
-                        if (nextLine.StartsWith("["))
+                        
+                        if ( ( nextLine != null && nextLine.StartsWith("[") ) || nextLine == null)
                         {
                             CheckPlayerUniqueness(currentBlack, currentWhite, playerByName);
                             CheckEventUniqueness(currentEvent, eventsByKey);
@@ -40,8 +39,8 @@ public class PgnParser
                             currentWhite = new ChessPlayer();
                             currentBlack = new ChessPlayer();
                             currentEvent = new ChessEvent();
-                            line = nextLine;
                         }
+                        line = nextLine;
                     }
                     ParseEvent(line, currentEvent);
                     ParseGame(line, currentGame);
@@ -81,7 +80,7 @@ public class PgnParser
 
     private static void ParseEvent(string line, ChessEvent currentEvent)
     {
-        if (line.StartsWith("[Event"))
+        if (line.StartsWith("[Event "))
         {
             string eventName = line.Split('"')[1];
             currentEvent.SetEventName(eventName);
@@ -135,7 +134,7 @@ public class PgnParser
 
     private static void ParseWhitePlayer(string line, ChessPlayer currentWhite)
     {
-        if (line.StartsWith("[White"))
+        if (line.StartsWith("[White "))
         {
             string whitePName = line.Split('"')[1];
             currentWhite.SetPlayerName(whitePName);
@@ -150,7 +149,7 @@ public class PgnParser
 
     private static void ParseBlackPlayer(string line, ChessPlayer currentBlack)
     {
-        if (line.StartsWith("[Black"))
+        if (line.StartsWith("[Black "))
         {
             string blackPName = line.Split('"')[1];
             currentBlack.SetPlayerName(blackPName);
